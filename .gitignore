@@ -1,0 +1,63 @@
+# Virtual Environment
+venv/
+env/
+
+# Environment Variables (contains sensitive data)
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+.pytest_cache/
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Data files (don't commit large CSVs)
+data/*.csv
+data/raw/*.csv
+data/processed/*.csv
+!data/.gitkeep
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/sample/.gitkeep
+
+# Database
+*.db
+*.sqlite3
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/*
+!logs/.gitkeep
+
+# Notebooks
+notebooks/*.ipynb
+!notebooks/.gitkeep
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Windows
+nul

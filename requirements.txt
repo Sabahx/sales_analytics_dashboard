@@ -1,0 +1,31 @@
+# Core dependencies
+pandas==2.3.3
+numpy==2.3.5
+psycopg2-binary==2.9.11
+python-dotenv==1.2.1
+sqlalchemy==2.0.24
+streamlit==1.51.0
+plotly==6.5.0
+
+# Export dependencies
+openpyxl==3.1.5
+
+# Machine Learning dependencies
+prophet==1.2.1
+scikit-learn==1.7.2
+statsmodels==0.14.5
+
+# API dependencies
+fastapi==0.115.0
+uvicorn[standard]==0.34.0
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.17
+pydantic[email]==2.10.4
+sendgrid==6.11.0
+
+# Testing dependencies
+pytest==9.0.1
+pytest-cov==7.0.0
+pytest-mock==3.15.1
+faker==38.2.0
