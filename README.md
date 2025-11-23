@@ -1,6 +1,19 @@
 # Sales Analytics Dashboard
 
-A comprehensive end-to-end sales analytics platform featuring an interactive Streamlit dashboard, professional REST API with JWT authentication, and ML-powered revenue forecasting.
+A production-ready sales analytics platform featuring an interactive Streamlit dashboard, professional REST API with JWT authentication, machine learning forecasting, and real-time analytics on 540,000+ transactions.
+
+[![Python](https://img.shields.io/badge/Python-3.11-blue.svg)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115.0-009688.svg)](https://fastapi.tiangolo.com/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.51.0-FF4B4B.svg)](https://streamlit.io/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791.svg)](https://www.postgresql.org/)
+
+## Live Demo
+
+- **API Documentation**: [https://web-env-ef7b.up.railway.app/api/docs](https://web-env-ef7b.up.railway.app/api/docs)
+- **API Health Check**: [https://web-env-ef7b.up.railway.app/api/health](https://web-env-ef7b.up.railway.app/api/health)
+- **GitHub Repository**: [https://github.com/Sabahx/sales_analytics_dashboard](https://github.com/Sabahx/sales_analytics_dashboard)
+
+---
 
 ## Features
 
@@ -334,6 +347,64 @@ black src/
 flake8 src/
 ```
 
+## Railway Deployment (Production)
+
+This project is deployed on Railway with the following architecture:
+
+### Live Production Environment
+- **API Base URL**: `https://web-env-ef7b.up.railway.app`
+- **Database**: PostgreSQL 17 on Railway
+- **Data**: 540,000+ sales transactions from Kaggle dataset
+- **Authentication**: JWT tokens with 30-minute expiration
+- **Email Service**: SendGrid for email verification
+
+### Deployment Process
+
+1. **Database Setup**:
+   - Created Railway PostgreSQL service
+   - Configured public connection URL
+   - Created tables: `sales_transactions`, `users`
+   - Loaded 540K+ rows from CSV dataset
+
+2. **Web Service Deployment**:
+   - Connected GitHub repository for auto-deploy
+   - Configured environment variables
+   - Set up `Procfile` for uvicorn server
+   - Enabled automatic deployments on git push
+
+3. **Environment Configuration**:
+```env
+DB_HOST=mainline.proxy.rlwy.net
+DB_PORT=55926
+DB_NAME=railway
+API_SECRET_KEY=<generated-with-openssl>
+ENVIRONMENT=production
+DEBUG=False
+EMAIL_ENABLED=True
+```
+
+### Testing the Production API
+
+**Health Check**:
+```bash
+curl https://web-env-ef7b.up.railway.app/api/health
+```
+
+**Login (Default Admin)**:
+```bash
+curl -X POST "https://web-env-ef7b.up.railway.app/api/auth/login" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "username=admin&password=admin123"
+```
+
+**Get Analytics (with token)**:
+```bash
+curl -X GET "https://web-env-ef7b.up.railway.app/api/analytics/kpis" \
+  -H "Authorization: Bearer <your-token-here>"
+```
+
+---
+
 ## Production Deployment
 
 ### Security Checklist
@@ -396,10 +467,54 @@ pip install -r requirements.txt --force-reinstall
 
 This project is licensed under the MIT License.
 
+## Key Technical Highlights
+
+### Database Optimization
+- **Indexes**: Created on frequently queried columns (customer_id, country, invoice_date)
+- **Materialized Views**: Pre-aggregated KPIs for faster queries
+- **Connection Pooling**: Efficient database connection management with psycopg2
+
+### Security Best Practices
+- **Password Hashing**: bcrypt with salt rounds
+- **JWT Authentication**: Secure token-based authentication
+- **Environment Variables**: Sensitive data stored securely
+- **SQL Injection Prevention**: Parameterized queries throughout
+- **CORS Configuration**: Controlled cross-origin requests
+
+### Code Quality
+- **Type Hints**: Full Python type annotations
+- **Comprehensive Logging**: Structured logging with rotation
+- **Error Handling**: Try-except blocks with detailed error messages
+- **Testing**: Unit tests with pytest framework
+- **Documentation**: Comprehensive docstrings and inline comments
+
+### Performance
+- **Async Operations**: FastAPI async endpoints for better concurrency
+- **Caching**: Streamlit caching for expensive computations
+- **Batch Processing**: Efficient data loading (1000-row batches)
+- **Query Optimization**: Indexed queries and pre-aggregated views
+
+---
+
 ## Contact
+
+**Sabah Saleh**
+- GitHub: [@Sabahx](https://github.com/Sabahx)
+- Email: sabahsaleh101@gmail.com
+- LinkedIn: [Add your LinkedIn URL here]
 
 For questions or support, please open an issue on GitHub.
 
 ---
+
+## Acknowledgments
+
+- **Dataset**: [UCI Machine Learning Repository - Online Retail Dataset](https://archive.ics.uci.edu/ml/datasets/online+retail)
+- **Forecasting**: [Facebook Prophet](https://facebook.github.io/prophet/)
+- **Deployment**: [Railway](https://railway.app)
+
+---
+
+**⭐ If you found this project helpful, please give it a star!**
 
 **Built with FastAPI, Streamlit, PostgreSQL, and Facebook Prophet**
