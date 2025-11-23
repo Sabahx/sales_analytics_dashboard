@@ -1,9 +1,12 @@
 # Virtual Environment
 venv/
 env/
+.venv/
 
 # Environment Variables (contains sensitive data)
 .env
+.env.local
+.env.*.local
 
 # Python
 __pycache__/
@@ -14,19 +17,19 @@ __pycache__/
 *.egg-info/
 dist/
 build/
+*.so
+*.egg
 
 # Data files (don't commit large CSVs)
 data/*.csv
 data/raw/*.csv
-data/processed/*.csv
 !data/.gitkeep
 !data/raw/.gitkeep
-!data/processed/.gitkeep
-!data/sample/.gitkeep
 
 # Database
 *.db
 *.sqlite3
+*.sqlite
 
 # IDE
 .vscode/
@@ -34,10 +37,12 @@ data/processed/*.csv
 *.swp
 *.swo
 .ipynb_checkpoints/
+*.code-workspace
 
 # OS
 .DS_Store
 Thumbs.db
+desktop.ini
 
 # Logs
 *.log
@@ -61,3 +66,16 @@ docker-compose.override.yml
 
 # Windows
 nul
+
+# Deployment scripts (one-time use only)
+upload_data_simple.py
+upload_to_railway.py
+setup_railway_database.py
+
+# Railway logs
+railwaylogs
+
+# Session summaries (local development only)
+SESSION_SUMMARY.md
+RAILWAY_DEPLOYMENT_GUIDE.md
+RAILWAY_DEPLOYMENT_STATUS.md

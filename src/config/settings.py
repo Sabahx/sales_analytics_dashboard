@@ -15,7 +15,7 @@ load_dotenv()
 class DatabaseConfig:
     """Database connection configuration."""
 
-    DB_NAME: str = os.getenv('DB_NAME', 'sales_db')
+    DB_NAME: str = os.getenv('DB_NAME', 'sales_analytics')
     DB_USER: str = os.getenv('DB_USER', 'postgres')
     DB_PASSWORD: str = os.getenv('DB_PASSWORD', '')
     DB_HOST: str = os.getenv('DB_HOST', 'localhost')
@@ -170,8 +170,6 @@ class PathConfig:
     # Data directories
     DATA_DIR: str = os.path.join(PROJECT_ROOT, 'data')
     RAW_DATA_DIR: str = os.path.join(DATA_DIR, 'raw')
-    PROCESSED_DATA_DIR: str = os.path.join(DATA_DIR, 'processed')
-    SAMPLE_DATA_DIR: str = os.path.join(DATA_DIR, 'sample')
 
     # Log directory
     LOG_DIR: str = os.path.join(PROJECT_ROOT, 'logs')
@@ -185,8 +183,6 @@ class PathConfig:
         directories = [
             cls.DATA_DIR,
             cls.RAW_DATA_DIR,
-            cls.PROCESSED_DATA_DIR,
-            cls.SAMPLE_DATA_DIR,
             cls.LOG_DIR
         ]
         for directory in directories:
