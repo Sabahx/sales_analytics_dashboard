@@ -112,12 +112,12 @@ def get_revenue_forecast(
         )
 
         # Train model with PRODUCTION-TUNED parameters for Neon dataset
-        # Adjusted for full Kaggle dataset (more conservative to reduce overfitting)
+        # Balanced approach: Not too aggressive, not too conservative
         forecaster.train(
             prophet_df,
             seasonality_mode=seasonality_mode,
-            changepoint_prior_scale=0.08,  # More conservative (was 0.25)
-            seasonality_prior_scale=8.0,   # More moderate (was 15.0)
+            changepoint_prior_scale=0.15,  # Balanced (0.08 too low→25%, 0.25 too high→31%)
+            seasonality_prior_scale=10.0,  # Moderate (sweet spot between 8 and 15)
             add_country_holidays='UK'       # UK holidays
         )
         logger.info("Model training completed with optimized parameters")
