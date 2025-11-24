@@ -111,12 +111,13 @@ def get_revenue_forecast(
             detect_spikes=False      # Disable spike detection
         )
 
-        # Train model with OPTIMIZED parameters (grid search 80/20 split: 63.6% accuracy)
+        # Train model with PRODUCTION-TUNED parameters for Neon dataset
+        # Adjusted for full Kaggle dataset (more conservative to reduce overfitting)
         forecaster.train(
             prophet_df,
             seasonality_mode=seasonality_mode,
-            changepoint_prior_scale=0.25,  # Tuned via grid search
-            seasonality_prior_scale=15.0,  # Tuned via grid search
+            changepoint_prior_scale=0.08,  # More conservative (was 0.25)
+            seasonality_prior_scale=8.0,   # More moderate (was 15.0)
             add_country_holidays='UK'       # UK holidays
         )
         logger.info("Model training completed with optimized parameters")
