@@ -11,6 +11,20 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
+# Try to load Streamlit secrets if running in Streamlit Cloud
+try:
+    import streamlit as st
+    if hasattr(st, 'secrets'):
+        # Running in Streamlit Cloud - override env vars with secrets
+        for key in st.secrets:
+            os.environ[key] = str(st.secrets[key])
+except ImportError:
+    # Not running in Streamlit, continue normally
+    pass
+except Exception:
+    # Streamlit not fully initialized yet, continue normally
+    pass
+
 
 class DatabaseConfig:
     """Database connection configuration."""
