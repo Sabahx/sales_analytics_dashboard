@@ -512,7 +512,7 @@ This project is licensed under the MIT License.
 **Sabah Saleh**
 - GitHub: [@Sabahx](https://github.com/Sabahx)
 - Email: sabahsaleh101@gmail.com
-- LinkedIn: [Add your LinkedIn URL here]
+- LinkedIn: [(https://www.linkedin.com/in/sabah-saleh/)]
 
 For questions or support, please open an issue on GitHub.
 
