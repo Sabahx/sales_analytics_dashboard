@@ -190,9 +190,16 @@ class PathConfig:
 
 
 # Initialize and validate configuration on import
+# Make validation optional to support Streamlit Cloud deployment
 try:
-    DatabaseConfig.validate()
     PathConfig.ensure_directories()
-except ValueError as e:
-    print(f"Configuration Error: {e}")
-    raise
+except Exception as e:
+    print(f"Warning: Could not create directories: {e}")
+
+# Only validate database config if not in Streamlit Cloud or if credentials are provided
+if os.getenv('DB_PASSWORD'):
+    try:
+        DatabaseConfig.validate()
+    except ValueError as e:
+        print(f"Configuration Warning: {e}")
+        print("Database credentials must be configured in Streamlit Cloud secrets.")

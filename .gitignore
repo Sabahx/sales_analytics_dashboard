@@ -79,3 +79,6 @@ railwaylogs
 SESSION_SUMMARY.md
 RAILWAY_DEPLOYMENT_GUIDE.md
 RAILWAY_DEPLOYMENT_STATUS.md
+
+# Streamlit secrets (contains sensitive credentials)
+.streamlit/secrets.toml
