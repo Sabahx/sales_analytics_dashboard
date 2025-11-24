@@ -382,45 +382,6 @@ This project is deployed with a modern, scalable architecture:
 - Connection pooling enabled
 - Fast bulk upload: 593K rows in 12.4 minutes (627 rows/sec using PostgreSQL COPY)
 
-### Deployment Setup
-
-1. **Neon Database Setup**:
-   ```bash
-   # Connection string
-   postgresql://neondb_owner:npg_VogqX2pU1sNh@ep-delicate-block-ahzahxr5-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require
-
-   # Run fast upload
-   python fast_neon_upload.py
-   ```
-
-2. **Railway API Configuration**:
-   - Go to Railway Dashboard → Web Service → Variables
-   - Add environment variables:
-   ```env
-   DB_HOST=ep-delicate-block-ahzahxr5-pooler.c-3.us-east-1.aws.neon.tech
-   DB_PORT=5432
-   DB_NAME=neondb
-   DB_USER=neondb_owner
-   DB_PASSWORD=npg_VogqX2pU1sNh
-   API_SECRET_KEY=<generated-with-openssl>
-   ENVIRONMENT=production
-   DEBUG=False
-   EMAIL_ENABLED=True
-   ```
-
-3. **Streamlit Cloud Configuration**:
-   - Go to Streamlit Cloud → App Settings → Secrets
-   - Add secrets from `.streamlit/secrets.toml.example`:
-   ```toml
-   DB_HOST = "ep-delicate-block-ahzahxr5-pooler.c-3.us-east-1.aws.neon.tech"
-   DB_PORT = "5432"
-   DB_NAME = "neondb"
-   DB_USER = "neondb_owner"
-   DB_PASSWORD = "npg_VogqX2pU1sNh"
-   ENVIRONMENT = "production"
-   DEBUG = "False"
-   LOG_LEVEL = "INFO"
-   ```
 
 ### Testing the Production API
 
