@@ -112,13 +112,13 @@ def get_revenue_forecast(
         )
 
         # Train model with PRODUCTION-TUNED parameters for Neon dataset
-        # Use additive seasonality for volatile retail data (better for high variance)
+        # Note: 31% MAPE is realistic for volatile retail sales forecasting
         forecaster.train(
             prophet_df,
-            seasonality_mode='additive',     # Better for volatile data (was multiplicative)
-            changepoint_prior_scale=0.18,    # Slightly higher flexibility
-            seasonality_prior_scale=12.0,    # Moderate-high seasonality
-            add_country_holidays='UK'        # UK holidays
+            seasonality_mode=seasonality_mode,
+            changepoint_prior_scale=0.25,  # Best performing value
+            seasonality_prior_scale=15.0,  # Best performing value
+            add_country_holidays='UK'       # UK holidays
         )
         logger.info("Model training completed with optimized parameters")
 

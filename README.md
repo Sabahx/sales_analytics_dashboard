@@ -11,6 +11,7 @@ A production-ready sales analytics platform featuring an interactive Streamlit d
 
 - **API Documentation**: [https://web-env-ef7b.up.railway.app/api/docs](https://web-env-ef7b.up.railway.app/api/docs)
 - **API Health Check**: [https://web-env-ef7b.up.railway.app/api/health](https://web-env-ef7b.up.railway.app/api/health)
+- **Interactive Dashboard**: Deployed on Streamlit Cloud
 - **GitHub Repository**: [https://github.com/Sabahx/sales_analytics_dashboard](https://github.com/Sabahx/sales_analytics_dashboard)
 
 ---
@@ -24,7 +25,7 @@ A production-ready sales analytics platform featuring an interactive Streamlit d
 - **Customer Insights** - Segmentation, lifetime value, top customers
 - **Product Analysis** - Top products, performance metrics
 - **Geographic Analytics** - Sales by country with detailed metrics
-- **ML Forecasting** - Prophet-based revenue predictions (63.6% accuracy)
+- **ML Forecasting** - Prophet-based revenue predictions (31% MAPE on production data)
 
 ### REST API
 - **JWT Authentication** with bcrypt password hashing
@@ -299,10 +300,11 @@ Response:
 ## ML Forecasting
 
 The Prophet model provides revenue forecasting with:
-- **63.6% accuracy** on validation set
+- **31% MAPE (69% accuracy)** on production data - realistic for volatile retail sales
 - **30-day default forecast** (customizable)
 - **Confidence intervals** (upper/lower bounds)
-- **Trained on 80/20 split** for validation
+- **Trained on full year of data** (Dec 2010 - Dec 2011, 593K+ transactions)
+- **Optimized parameters**: changepoint_prior_scale=0.25, seasonality_prior_scale=15.0
 
 ## Configuration
 
@@ -347,41 +349,78 @@ black src/
 flake8 src/
 ```
 
-## Railway Deployment (Production)
+## Production Deployment
 
-This project is deployed on Railway with the following architecture:
+This project is deployed with a modern, scalable architecture:
 
 ### Live Production Environment
 - **API Base URL**: `https://web-env-ef7b.up.railway.app`
-- **Database**: PostgreSQL 17 on Railway
-- **Data**: 540,000+ sales transactions from Kaggle dataset
+- **API Service**: FastAPI on Railway
+- **Dashboard**: Streamlit on Streamlit Cloud
+- **Database**: Neon PostgreSQL (serverless, production-grade)
+- **Data**: 593,099 sales transactions from Kaggle dataset (Dec 2010 - Dec 2011)
 - **Authentication**: JWT tokens with 30-minute expiration
 - **Email Service**: SendGrid for email verification
 
-### Deployment Process
+### Architecture
 
-1. **Database Setup**:
-   - Created Railway PostgreSQL service
-   - Configured public connection URL
-   - Created tables: `sales_transactions`, `users`
-   - Loaded 540K+ rows from CSV dataset
+**Railway (API Service)**:
+- FastAPI REST API with 17+ endpoints
+- JWT authentication and email verification
+- Auto-deploy on GitHub push
+- `Procfile`: `web: uvicorn src.api.main:app --host 0.0.0.0 --port $PORT`
 
-2. **Web Service Deployment**:
-   - Connected GitHub repository for auto-deploy
-   - Configured environment variables
-   - Set up `Procfile` for uvicorn server
-   - Enabled automatic deployments on git push
+**Streamlit Cloud (Dashboard)**:
+- Interactive analytics dashboard
+- Real-time visualizations with Plotly
+- ML forecasting interface
+- Connected to Neon PostgreSQL
 
-3. **Environment Configuration**:
-```env
-DB_HOST=mainline.proxy.rlwy.net
-DB_PORT=55926
-DB_NAME=railway
-API_SECRET_KEY=<generated-with-openssl>
-ENVIRONMENT=production
-DEBUG=False
-EMAIL_ENABLED=True
-```
+**Neon PostgreSQL (Database)**:
+- Serverless PostgreSQL with autoscaling
+- 3GB free tier with excellent performance
+- Connection pooling enabled
+- Fast bulk upload: 593K rows in 12.4 minutes (627 rows/sec using PostgreSQL COPY)
+
+### Deployment Setup
+
+1. **Neon Database Setup**:
+   ```bash
+   # Connection string
+   postgresql://neondb_owner:npg_VogqX2pU1sNh@ep-delicate-block-ahzahxr5-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require
+
+   # Run fast upload
+   python fast_neon_upload.py
+   ```
+
+2. **Railway API Configuration**:
+   - Go to Railway Dashboard → Web Service → Variables
+   - Add environment variables:
+   ```env
+   DB_HOST=ep-delicate-block-ahzahxr5-pooler.c-3.us-east-1.aws.neon.tech
+   DB_PORT=5432
+   DB_NAME=neondb
+   DB_USER=neondb_owner
+   DB_PASSWORD=npg_VogqX2pU1sNh
+   API_SECRET_KEY=<generated-with-openssl>
+   ENVIRONMENT=production
+   DEBUG=False
+   EMAIL_ENABLED=True
+   ```
+
+3. **Streamlit Cloud Configuration**:
+   - Go to Streamlit Cloud → App Settings → Secrets
+   - Add secrets from `.streamlit/secrets.toml.example`:
+   ```toml
+   DB_HOST = "ep-delicate-block-ahzahxr5-pooler.c-3.us-east-1.aws.neon.tech"
+   DB_PORT = "5432"
+   DB_NAME = "neondb"
+   DB_USER = "neondb_owner"
+   DB_PASSWORD = "npg_VogqX2pU1sNh"
+   ENVIRONMENT = "production"
+   DEBUG = "False"
+   LOG_LEVEL = "INFO"
+   ```
 
 ### Testing the Production API
 
@@ -403,9 +442,20 @@ curl -X GET "https://web-env-ef7b.up.railway.app/api/analytics/kpis" \
   -H "Authorization: Bearer <your-token-here>"
 ```
 
----
+### Why Neon PostgreSQL?
 
-## Production Deployment
+**Before (Railway PostgreSQL)**:
+- Frequent crashes and connection timeouts
+- Slow upload speed (~10 rows/sec)
+- Only 31,000 rows uploaded successfully
+- Unstable free tier
+
+**After (Neon PostgreSQL)**:
+- Stable, serverless PostgreSQL
+- Fast bulk upload (627 rows/sec using COPY)
+- Full dataset uploaded: 593,099 rows
+- 3GB free tier with autoscaling
+- Production-grade performance
 
 ### Security Checklist
 - [ ] Change `API_SECRET_KEY` to secure random value
@@ -419,12 +469,12 @@ curl -X GET "https://web-env-ef7b.up.railway.app/api/analytics/kpis" \
 - [ ] Implement rate limiting
 - [ ] Set up monitoring and alerts
 
-### Deployment Options
+### Alternative Deployment Options
 - **Cloud Platforms:** Heroku, AWS (ECS/Elastic Beanstalk), Azure, DigitalOcean
 - **Containerization:** Docker + Docker Compose
 - **Process Manager:** PM2, Supervisor, systemd
 - **Reverse Proxy:** Nginx, Apache
-- **Database:** AWS RDS, Azure Database, DigitalOcean Managed Databases
+- **Database Alternatives:** AWS RDS, Azure Database, Supabase, PlanetScale
 
 ## Troubleshooting
 

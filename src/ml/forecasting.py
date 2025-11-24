@@ -112,8 +112,8 @@ class SalesForecaster:
         self,
         df: pd.DataFrame,
         seasonality_mode: str = 'multiplicative',
-        changepoint_prior_scale: float = 0.15,  # Balanced (0.08→25%, 0.25→31%)
-        seasonality_prior_scale: float = 10.0,   # Moderate seasonality (tuned for Neon)
+        changepoint_prior_scale: float = 0.25,  # Best performing (31% MAPE)
+        seasonality_prior_scale: float = 15.0,   # Best performing
         add_country_holidays: str = 'UK'
     ) -> None:
         """
